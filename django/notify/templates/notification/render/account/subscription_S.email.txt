@@ -1,0 +1,5 @@
+{% extends "notification/render/base_email_self.txt" %}
+
+{% block message %}
+Your VIP vidiovibe.com subscription has been activated.
+{% endblock %}

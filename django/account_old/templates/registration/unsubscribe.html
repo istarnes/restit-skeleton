@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Unsubscribe</title>
+	<style type="text/css" media="screen">
+		@import url(https://fonts.googleapis.com/css?family=Raleway:300,700);
+
+		body {
+		  width:100%;
+		  height:100%;
+		  background:#48A9E6;
+		  font-family: 'Raleway', sans-serif;
+		  font-weight:300;
+		  margin:0;
+		  padding:0;
+		}
+
+		#title {
+		  text-align:center;
+		  font-size:40px;
+		  margin-top:40px;
+		  margin-bottom:-40px;
+		  position:relative;
+		  color:#fff;
+		}
+
+		.circles:after {
+		  content:'';
+		  display:inline-block;
+		  width:100%;
+		  height:150px;
+		  background:#fff;
+		  position:absolute;
+		  top:-50px;
+		  left:0;
+		  transform:skewY(-4deg);
+		  -webkit-transform:skewY(-4deg);
+		}
+
+		.circles {
+			background:#fff;
+			text-align: center;
+			position: relative;
+		  margin-top:-60px;
+		  box-shadow:inset -1px -4px 4px rgba(0,0,0,0.2);
+		}
+
+		.circles p {
+			font-size: 240px;
+			color: #48A9E6;
+			padding-top: 60px;
+			position: relative;
+		  z-index: 9;
+		  line-height: 100%;
+		}
+
+		.circles p small {
+		  font-size: 40px;
+		  line-height: 100%;
+		  vertical-align: top;
+		}
+	</style>
+</head>
+<body>
+  <section id="not-found">
+    <div id="title">Unsubscribe</div>
+    <div class="circles">
+      <p>{{status}}<br>
+       <small>{{message}}</small>
+      </p>
+    </div>
+  </section>
+ </body>
+</html>

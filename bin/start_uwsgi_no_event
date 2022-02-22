@@ -1,0 +1,69 @@
+#!/bin/sh
+
+if [ -w / ]; then # is root
+	echo "DJANGO + WEBSOCK EVENT UWSGI SERVICE..."
+else
+	echo "you must be root"
+	exit 1
+fi
+
+DIR="$(dirname $(dirname $(readlink -f $0)))"
+
+DJANGO_WORKERS=5
+DJANGO_RELOAD_FILE=".git/index"
+DJANGO_LOG="var/django.log"
+DJANGO_PID="var/django.pid"
+
+EVENT_WORKERS=2
+EVENT_RELOAD_FILE=".git/index"
+EVENT_LOG="var/event.log"
+EVENT_PID='var/event.pid'
+
+LOG_PARAMS="--log-reopen --log-maxsize=10485760 --logfile-chmod=644"
+
+DJANGO_PARAMS="--pythonpath=django --socket var/django.sock --buffer-size=32768 --harakiri=400 --enable-threads --workers=$DJANGO_WORKERS --procname-append='-django' --auto-procname --master --module wsgi_django  --vacuum --touch-reload=$DJANGO_RELOAD_FILE $LOG_PARAMS --pidfile=$DJANGO_PID"
+EVENT_PARAMS="--pythonpath=django --die-on-term --reload-mercy 8 --http-socket var/event.sock --gevent 1000 --http-websockets --workers=${EVENT_WORKERS} --procname-append='-event' --auto-procname --master --module wsgi_event --touch-reload=$EVENT_RELOAD_FILE $LOG_PARAMS --pidfile=$EVENT_PID"
+
+cd $DIR
+
+if [ -d var ]
+then
+    echo "var exists"
+    rm -rf ${DJANGO_LOG}.*
+    rm -rf ${EVENT_LOG}.*
+else
+	echo "var directory does not exist... creating.."
+	mkdir var
+	chown ec2-user:www var
+fi
+
+echo "stopping existing service if running"
+if [ -e "$DJANGO_PID" ]
+then
+	if [ -e /proc/${DJANGO_PID} -a /proc/${DJANGO_PID}/exe ]; then
+        printf "RUNNING\n"
+        uwsgi --stop $DJANGO_PID
+    fi
+fi
+
+if [ -e "$EVENT_PID" ]
+then
+    if [ -e /proc/${EVENT_PID} -a /proc/${EVENT_PID}/exe ]; then
+        printf "RUNNING\n"
+        uwsgi --stop $EVENT_PID
+    fi
+fi
+
+
+printf "starting DJANGO SERVER..."
+echo $DJANGO_PARAMS
+exec su -m www -c "uwsgi ${DJANGO_PARAMS} -d $DJANGO_LOG" &
+sleep 2
+PID=`cat $DJANGO_PID`
+if [ -e /proc/${PID} -a /proc/${PID}/exe ]; then
+    printf "RUNNING\n"
+else
+    printf "FAILED\n"
+    exit 1
+fi
+

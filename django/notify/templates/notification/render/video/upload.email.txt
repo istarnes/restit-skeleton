@@ -1,0 +1,7 @@
+{% extends "notification/render/base_email_self.txt" %}
+
+{% block message %}
+Your video "{{ stat.video.title }}" was successfully uploaded and submitted for approval.  Score. Stay with us, there's just one more step before you can share with fans and enter contests.
+
+View at: ({{BASE_URL}}manage/videos/pending")
+{% endblock %}

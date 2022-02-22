@@ -1,0 +1,13 @@
+{% extends "email/base.html" %}
+{% block body %}
+	<div style="text-align:center;">
+		<h4>{{by.get_full_name}} invited you to join the website <a href="{{website}}">'{{website}}'</a>!</h4>
+	</div>
+	<p class="note">
+		{% if message %}
+	    	{{message}}
+	    	<br>
+	    	- <img src="{{by.thumbnail}}" alt="" class="avatar"> {{by.get_full_name}}
+		{% endif %}
+	</p>
+{% endblock %}

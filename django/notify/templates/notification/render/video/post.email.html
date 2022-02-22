@@ -1,0 +1,7 @@
+{% extends "notification/render/base_email.html" %}
+
+{% block message %}
+Your video upload for &ldquo;<a href="{{BASE_URL}}watch/video/{{ stat.video.id }}">{{ stat.video.title }}</a>&rdquo; was approved.
+<br/>
+Yay! Remember to <a href="{{BASE_URL}}/contests"/>enter the weekly contest</a> and share your new video with your fans.
+{% endblock %}

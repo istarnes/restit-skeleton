@@ -1,0 +1,5 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block message %}
+Your video upload for &ldquo;<a href="/channels/video/{{ stat.video.id }}">{{ stat.video.title }}</a>&rdquo; was approved.
+{% endblock %}

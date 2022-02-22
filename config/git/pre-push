@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./bin/helper --bump
+echo "ignore error below"
+exit 1

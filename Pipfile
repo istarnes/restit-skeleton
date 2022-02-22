@@ -1,0 +1,47 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "*"
+django-extensions = "*"
+django-redis-cache = "*"
+django-redis-sessions = "*"
+twilio = "*"
+six = "*"
+phonenumbers = "*"
+wsaccel = "*"
+xmltodict = "*"
+xhtml2pdf = "*"
+fuzzywuzzy = "*"
+pdf417gen = "*"
+pycountry = "*"
+mistune = "*"
+pycryptodome = "*"
+psutil = "*"
+slack-sdk = "*"
+ujson = "*"
+pillow = "*"
+pypng = "*"
+pygments = "*"
+uwsgi = "*"
+python-levenshtein = "*"
+faker = "*"
+bai2 = "*"
+pyqrcode = "*"
+channels-redis = "*"
+boto3 = "*"
+pyotp = "*"
+opencv-contrib-python = "*"
+coinbase = "*"
+hashids = "*"
+inlinestyler = "*"
+httplib2 = "*"
+pyquery = "*"
+objict = {git = "https://github.com/311labs/objict.git"}
+
+[requires]
+python_version = "3.8"

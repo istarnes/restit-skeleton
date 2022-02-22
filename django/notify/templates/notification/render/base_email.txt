@@ -1,0 +1,17 @@
+{% extends "base_email.txt" %}
+
+{% block subheading %}NOTIFICATION{% endblock %}
+
+{% block body %}
+Hi {{ stat.user.get_full_name }},
+
+
+{% block user %}{% if stat.related_user %}{{ stat.related_user.get_full_name }} | {{ stat.created|date:"M jS" }} ({{BASE_URL}}profile/{{ stat.related_user.username }}/){% else %}VidioVibe | {{ stat.created|date:"M jS" }}{% endif %}{% endblock %}
+{% block message %}{% endblock %}{% comment %}
+-----------------------------------------------------------------------------------------------------------------------------------------
+VidioVibe is still in beta. If we're going to make the sweetest site ever, we need
+your help. What do you like? What's missing? How can we make VidioVibe better for you?
+
+Let us know by checking out this survey:
+{{BASE_URL}}somelink{% endcomment %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "notification/render/base_email.html" %}
+
+{% block message %}
+Sorry, your upload for <a href="{{BASE_URL}}profile/{{user.username}}/videos/rejected">{{ stat.video.title }}</a> was rejected.
+<span style="margin: 5px; padding: 5px; border-radius: 4px; border: 1px solid #65000f; display: block; font-style: italic; color: #990514; background: #fffdf5;">
+{{stat.video.reject_reason}}
+</span>
+<br/>
+Please try again. We'd love to see your work on VidioVibe.
+{% endblock %}

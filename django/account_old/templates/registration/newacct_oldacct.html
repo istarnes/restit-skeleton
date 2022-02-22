@@ -1,0 +1,26 @@
+{% extends "base_static.html" %} {% block title %}Password Reset{% endblock %} {% block content %}
+<section id="login">
+    
+    <div id="loginbox" class="panel panel-default">
+        <div class="panel-header">
+         {% if group %}
+         <h2 class="text-center color-blue">Invite To '{{group.name}}' Campaign</h2>
+         {% endif %}           
+        </div>
+        <div class="panel-body">
+
+            <h4>This invite is for a different account!</h4>
+            <p>current account: {{old_acct.email}}</p>
+            <p>invited account: {{new_acct.email}}</p>
+            <a href="?merge=1" class="btn btn-success btn-block">accept invite as {{old_acct.email}}</a>
+            <a href="?create=1" class="btn btn-primary btn-block">create new account {{new_acct.email}}</a>
+
+        </div>
+        <div class="panel-footer text-center">
+            <span>Powered by </span>
+            <img src="/static/img/brand_dark.png" alt="">
+        </div>
+    </div>
+
+</section>
+{% endblock content %}

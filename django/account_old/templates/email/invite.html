@@ -1,0 +1,16 @@
+{% extends "email/base.html" %}
+{% block body %}
+	<div style="text-align:center;">
+		<img src="{{group.thumbnail}}" class="group-thumb" alt="">
+		<h4>{{by.get_full_name}} invited you to join the '{{group.name}}'!</h4>
+	</div>
+	<p class="note">
+		{% if message %}
+	    	{{message}}
+	    	<br>
+	    	- <img src="{{by.thumbnail}}" alt="" class="avatar"> {{by.get_full_name}}
+		{% endif %}
+	</p>
+	<a href="{{BASE_URL}}invite/{{uuid}}-{{token}}" class="button" style="width: 80%; text-align: center; padding: 14px; text-decoration: none;">Click here to join!</a>
+{% endblock %}
+

@@ -1,0 +1,29 @@
+{% extends "base_static.html" %} {% block title %}Login{% endblock %} {% block content %}
+<section id="login">
+    
+    <div id="loginbox">
+        <div class="panel-body">
+            <div class="login-brand">
+                <img src="/static/img/brand_light.png" alt="">
+            </div>
+            <h1 class="color-red text-center">
+                Social Auth Canceled
+            </h1>
+            <h2 class="color-white">
+                <a href="/login">TRY AGAIN</a>
+            </h2>
+        </div>
+    </div>
+</section>
+
+<script>
+    // $(document).ready(function () {
+    //     console.log("document.ready clear_cache");
+    //     if (window.is_native && window.sendServiceCommand) {
+    //         console.log("CLEARING CACHE");
+    //         window.sendServiceCommand("browser", "clear_cache");
+    //     }
+    // });
+</script>
+
+{% endblock content %}

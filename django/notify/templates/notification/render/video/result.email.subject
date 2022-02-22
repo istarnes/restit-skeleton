@@ -1,0 +1,1 @@
+{% load humanize %}Your VidioVibe.com {{ stat.result.contest.category.name|lower }} video won ${{ stat.result.reward_text|intcomma }}!

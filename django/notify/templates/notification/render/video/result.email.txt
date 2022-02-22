@@ -1,0 +1,11 @@
+{% extends "notification/render/base_email_self.txt" %}{% load humanize %}
+
+{% block message %}
+Your video, {{ stat.video.title }}</a>, won the {{ stat.result.contest.get_kind_display|lower }} {{ stat.result.contest.category.name|lower }} competition.
+
+Congratulations! We won't ask that you share the winnings with them, but don't forget to thank your fans for rating your video and catapulting it to the winner's circle.
+
+Stay tuned...you'll be receiving another email from us shortly to work out the details
+
+View video at: {{BASE_URL}}channels/video/{{ stat.video.id }}
+{% endblock %}

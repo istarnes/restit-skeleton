@@ -1,0 +1,5 @@
+{% extends "notification/render/base_email_self.html" %}
+
+{% block message %}
+Your {{ stat.fields|default:"account" }} has been updated.
+{% endblock %}

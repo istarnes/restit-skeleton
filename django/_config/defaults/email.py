@@ -1,0 +1,47 @@
+#EMAIL_BACKEND = 'django_ses.SESBackend'
+
+NOTIFY_REST_ERRORS = True
+
+EMAIL_DEFAULT_DOMAIN = "311labs.com"
+SERVER_EMAIL = 'noreply@{0}'.format(EMAIL_DEFAULT_DOMAIN)
+DEFAULT_FROM_EMAIL = "RestIt <restit@{0}>".format(EMAIL_DEFAULT_DOMAIN)
+TICKET_FROM_EMAIL = "RestIt Support <ticket@{}>".format(EMAIL_DEFAULT_DOMAIN)
+
+INVITE_SUBJECT = "You have an invite to {0}!".format(EMAIL_DEFAULT_DOMAIN)
+
+
+SES_ACCESS_KEY = "XXXX"
+SES_SECRET_KEY = "XXXX"
+SES_REGION = "us-west-2"
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
+EMAIL_HOST_USER = 'XXXX'
+EMAIL_HOST_PASSWORD = 'XXXX'
+EMAIL_PORT = 587
+
+ADMIN_NOTIFY_ADDRESS = (
+    'noreply@{0}'.format(EMAIL_DEFAULT_DOMAIN),
+)
+
+MEDIALIB_NOTIFY_READY = False
+MEDIALIB_NOTIFY_PENDING = False
+
+MEDIALIB_NOTIFY_OWNER = False
+
+MEDIALIB_MAIL_FROM = "{0} <noreply@{0}>".format(EMAIL_DEFAULT_DOMAIN)
+
+MEDIALIB_MAIL_NOTIFY = (
+    'support@311labs.com',
+    'support@{0}'.format(EMAIL_DEFAULT_DOMAIN),
+)
+
+ADMIN_NOTIFY_USERS = (
+
+)
+
+SUPPORT_EMAIL = 'support@311labs.com'
+
+NOTIFICATION_EMAIL_ALLOW = ()
+
+NOTIFICATION_SMS_ALLOW = ()

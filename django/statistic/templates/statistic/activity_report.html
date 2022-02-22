@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Vidi Entertainment - Student Contest - Statistic reports{% endblock %}
+
+
+{% block page %}
+
+<h2>Statistical information </h2>
+<h3>New Users (This week)  </h3>
+  <ul>
+  {% if not new_users %}
+     <li>No new users joined in the last 7 days</li>
+  {% else %}    
+    {% for day,count in new_users %}
+       <li>{{day|date:"M d"}} , {{count}} </li>
+    {% endfor %}
+  {% endif %}  
+  </ul>
+
+<h3>New Videos Submited (This week)  </h3>
+  <ul>
+  {% if not new_videos %}
+     <li>No new videos submited in the last 7 days</li>
+  {% else %}    
+    {% for day,count in new_videos %}
+       <li>{{day|date:"M d"}} , {{count}} </li>
+    {% endfor %}
+  {% endif %}  
+  </ul>
+
+  
+ 
+<h3>Unique Sessions per day </h3>
+From google Analytics
+  <ul>
+  {% if not new_sessions %}
+     <li>No new visits in the last 7 days</li>
+  {% else %}    
+    {% for day,count in new_sessions %}
+       <li>{{day|date:"M d"}} , {{count}} </li>
+    {% endfor %}
+  {% endif %}  
+  </ul>
+   
+  <h3>Error Reports </h3>
+  <ul>
+    <li>From Logs</li>
+    <li>From logging framework (TBD)</li>
+  </ul>
+  <h3>Bandwidth Use </h3>
+  <ul>
+    <li>TBD: Read from Amazon</li>
+  </ul>
+  <h3>Media library storage totals</h3>
+  <ul>
+    <li>{{storage_dir}} is currently using {{storage_total}} bytes</li>
+    <li>{{storage_dir}} currently holds {{files_total}} videos</li>
+  </ul>
+    
+{% endblock %}    

@@ -1,0 +1,34 @@
+#!/bin/sh
+if [ -w / ]; then # is root
+	echo "DJANGO + WEBSOCK EVENT UWSGI SERVICE..."
+else
+	echo "you must be root"
+	exit 1
+fi
+
+DIR="$(dirname $(dirname $(readlink -f $0)))"
+
+PARAMS="-i ${DIR}/nginx/uwsgi.ini"
+
+DJANGO_PID="var/django.pid"
+EVENT_PID='var/event.pid'
+
+cd $DIR
+
+echo "stopping existing service if running"
+if [ -e "$DJANGO_PID" ]
+then
+	uwsgi --stop $DJANGO_PID
+fi
+
+if [ -e "$EVENT_PID" ]
+then
+	uwsgi --stop $EVENT_PID
+fi
+
+if [ "$1" = "all" ]
+then
+	echo "killing all uWSGI masters"
+	pgrep -f "uWSGI master" | xargs kill
+fi
+

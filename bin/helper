@@ -1,0 +1,93 @@
+#!/usr/bin/env python3.8
+
+import script_helper
+import os
+import shutil
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False)
+parser.add_option(
+    "-c", "--checkup", action="store_true", dest="checkup",
+    default=False, help="run quick check for error")
+parser.add_option("-b", "--bump", action="store_true", dest="bump", default=False, help="bump the revision")
+parser.add_option("-u", "--user", type="str", dest="user", default=None, help="specify user")
+parser.add_option("--logout", action="store_true", dest="logout", default=False, help="logout specified user")
+parser.add_option("--changelog", action="store_true", dest="changelog", default=False, help="log commits to CHANGELOG.MD")
+
+
+def checkSetup():
+    GIT_ATTR = os.path.join(script_helper.ROOT, ".gitattributes")
+    if not os.path.exists(GIT_ATTR):
+        with open(GIT_ATTR, "w") as f:
+            f.write("django/version.py merge=ours\n\n")
+        script_helper.runGit("config", "--global", "merge.ours.driver", "true")
+        script_helper.runGit("add", ".gitattributes")
+        print("\t+ added .gitattributes")
+    GIT_HOOKS_PATH = os.path.join(script_helper.ROOT, ".git", "hooks")
+    PRE_COMMIT = os.path.join(GIT_HOOKS_PATH, "pre-commit")
+    if os.path.exists(PRE_COMMIT):
+        with open(PRE_COMMIT, 'r') as f:
+            data = f.read()
+            if "bump" not in data:
+                shutil.copy2(os.path.join(script_helper.ROOT, "config", "git", "pre-commit"), PRE_COMMIT)
+    else:
+        print(os.path.join(script_helper.ROOT, "git-pre-commit"))
+        shutil.copy2(os.path.join(script_helper.ROOT, "config", "git", "pre-commit"), PRE_COMMIT)
+        print("\t+ added .git/hooks/pre-commit\t- for version incrementing")
+        script_helper.runGit("add", ".git/hooks/pre-commit")
+        # git config --global merge.ours.driver true
+        script_helper.runGit("config", "--global", "merge.ours.driver", "true")
+
+    # PRE_PUSH = os.path.join(GIT_HOOKS_PATH, "pre-push")
+    # if os.path.exists(PRE_PUSH):
+    #     with open(PRE_PUSH, 'r') as f:
+    #         data = f.read()
+    #         if "bump" not in data:
+    #             shutil.copy2(os.path.join(script_helper.ROOT, "config", "git", "pre-push"), PRE_PUSH)
+    # else:
+    #     print(os.path.join(script_helper.ROOT, "git-pre-push"))
+    #     shutil.copy2(os.path.join(script_helper.ROOT, "config", "git", "pre-push"), PRE_PUSH)
+    #     print("\t+ added .git/hooks/pre-push\t- for version incrementing")
+    #     script_helper.runGit("add", ".git/hooks/pre-push")
+    #     # git config --global merge.ours.driver true
+    #     script_helper.runGit("config", "--global", "merge.ours.driver", "true")
+
+
+def checkMergeStrat():
+    if script_helper.runGit("config", "--global", "--get", "merge.ours.driver").strip() != "true":
+        print("merge strat not set")
+        # runGit("config", "--global", "merge.ours.driver", "true")
+    else:
+        print("merge strat is set")
+
+
+def main(opts, args):
+    checkSetup()
+    script_helper.printBanner()
+    if opts.checkup:
+        script_helper.testApps()
+    if opts.bump:
+        script_helper.bumpVersion(0, 0, 1)  # only bump revision
+        script_helper.runGit("add", "django/version.py")
+    if opts.changelog:
+        script_helper.logChanges()
+        # now lets add our files and recommit
+        script_helper.runGit("add", "CHANGELOG.md")
+        script_helper.runGit("commit", "-m", "changelog: {}".format(script_helper.version.VERSION), "--no-verify")
+    if opts.user:
+        if opts.logout:
+            script_helper.logoutUser(opts.user)
+        elif opts.user_sessions:
+            user = script_helper.getUser(opts.user)
+            print("username: {}".format(opts.user))
+            print("name: {}", user.get_full_name())
+            print("created: {}", user.date_joined)
+            print("last login: {}", user.last_login)
+            print("active sessions: {}", user.getSessionCount())
+
+
+if __name__ == '__main__':
+    main(*parser.parse_args())
+
+

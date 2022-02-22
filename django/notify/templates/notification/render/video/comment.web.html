@@ -1,0 +1,8 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block message %}
+{{ stat.comment.user.member.display_name }} commented on your video:
+&ldquo;<a href="/channels/video/{{ stat.video.id }}">{{ stat.video.title }}</a>&rdquo;
+<br/>
+Comment back so they're not talking to themselves!
+{% endblock %}

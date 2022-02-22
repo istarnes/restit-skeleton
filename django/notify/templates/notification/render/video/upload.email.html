@@ -1,0 +1,6 @@
+{% extends "notification/render/base_email_self.html" %}
+
+{% block message %}
+Your video &ldquo;<a href="{{BASE_URL}}profile/{{user.username}}/videos/pending" style="color: #263b42;">{{ stat.video.title }}</a>&rdquo;
+was successfully uploaded and submitted for approval.  Score. Stay with us, there's just one more step before you can share with fans and enter contests.
+{% endblock %}

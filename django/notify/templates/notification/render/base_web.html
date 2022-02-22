@@ -1,0 +1,22 @@
+<dl class="newsreel-details clearfix">
+	<dt>
+{% block user %}
+{% if stat.related_user %}
+		<a href="/profile/{{ stat.related_user.username }}/">{{ stat.related_user.get_full_name }}</a>
+{% else %}
+		VidioVibe
+{% endif %}
+{% endblock %}
+	</dt>
+	<dd class="time">{{ stat.created|date:"M jS" }}</dd>
+	<dd class="message">{% block message %}{% endblock %}</dd>
+	<dd class="avatar-small">
+{% block avatar %}
+{% if stat.related_user %}
+		<a href="/profile/{{ stat.related_user.username }}/"><img src="{% if stat.related_user.member.small_thumbnail %}{{ stat.related_user.member.small_thumbnail }}{% else %}{{ RevData.image_user_thumbnail_small }}{% endif %}" /></a>
+{% else %}
+		<img src="{{ RevData.image_vidi_thumbnail_small }}" />
+{% endif %}
+{% endblock %}
+	</dd>
+</dl>

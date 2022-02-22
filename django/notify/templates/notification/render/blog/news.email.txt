@@ -1,0 +1,5 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+News update: {{ stat.blogentry.message }}
+{% endblock %}

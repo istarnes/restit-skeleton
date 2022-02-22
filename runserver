@@ -1,0 +1,86 @@
+#!/bin/bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+PROJECT_ROOT=$DIR
+
+SETUP_FILE=$PROJECT_ROOT/django/settings.py
+LOCAL_FILE="_local"
+PROD_FILE="_prod"
+TEST_FILE="_test"
+
+cd $PROJECT_ROOT
+
+# local server fails to launch correctly if this directory is missing
+if [ ! -d "var" ] 
+then
+    echo "creating missing var directory"
+    mkdir var 
+fi
+
+PONG=`redis-cli ping 2>&1`
+
+if [ "$PONG" = "PONG" ]
+then
+   echo "redis server is running"
+else
+   echo "no redis server running... attempting to start"
+   redis-server > redis.log 2>&1 &
+   sleep 2
+   PONG=`redis-cli ping 2>&1`
+   if [ "$PONG" != "PONG" ]
+   then
+       echo "redis server could not be started!"
+       exit
+   fi
+fi
+
+if [ -z "$PIPENV_ACTIVE" ]
+then
+	echo "entering project virtual enviroment"
+	source $(pipenv --venv)/bin/activate
+fi
+
+if [ ! -e "$SETUP_FILE" ]; then
+	echo "creating setup file...."
+	echo "from _config.local import *" > $SETUP_FILE
+	./django/manage.py migrate
+	echo "creating superuser...."
+	./django/manage.py createsuperuser --username=admin --email="support@311labs.com"
+	./django/manage.py loaddata django/medialib/fixtures/initial_data.json
+fi
+
+GIT_HOOK=$PROJECT_ROOT/config/git/pre-commit
+GIT_HOOK_DST=$PROJECT_ROOT/.git/hooks/pre-commit
+
+if [ ! -e "$GIT_HOOK_DST" ]; then
+    echo "!! missing versioning hook !!"
+    cp "$GIT_HOOK" "$GIT_HOOK_DST"
+fi
+
+GIT_HOOK=$PROJECT_ROOT/config/git/post-merge
+GIT_HOOK_DST=$PROJECT_ROOT/.git/hooks/post-merge
+
+if [ ! -e "$GIT_HOOK_DST" ]; then
+    echo "!! missing merge hook !!"
+    cp "$GIT_HOOK" "$GIT_HOOK_DST"
+fi
+
+if [ "$1" = "--reset" ]
+  then
+  echo -n "reset db [y/n]: "
+  read procede
+  if [ "$procede" == "y" ]
+  then
+./django/manage.py flush
+echo "set admin password..."
+./django/manage.py createsuperuser --username=admin --email="support@311labs.com"
+  fi
+fi
+./bin/checkup.py
+if [ $? -ne 0 ]; then
+    echo "FIX ERRORS IN RPC"
+    exit
+fi
+
+./django/manage.py showmigrations | grep '\[ \]'
+./django/manage.py run 0.0.0.0:8000
+

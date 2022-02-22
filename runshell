@@ -1,0 +1,84 @@
+#!/bin/bash
+
+IGNORE=0
+
+for argval in "$@"
+do
+       if [ "$argval" = "-i" ];then
+       	  echo "ignore tests"
+       	  IGNORE=1
+       fi
+done
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+PROJECT_ROOT=$DIR
+
+SETUP_FILE=$PROJECT_ROOT/django/settings.py
+LOCAL_FILE="_local"
+PROD_FILE="_prod"
+TEST_FILE="_test"
+
+cd $PROJECT_ROOT
+
+if [ -z "$PIPENV_ACTIVE" ]
+then
+	echo "entering project virtual enviroment"
+	source $(pipenv --venv)/bin/activate
+fi
+
+GIT_HOOK=$PROJECT_ROOT/config/git/pre-commit
+GIT_HOOK_DST=$PROJECT_ROOT/.git/hooks/pre-commit
+
+if [ ! -e "$GIT_HOOK_DST" ]; then
+    echo "!! missing versioning hook !!"
+    cp "$GIT_HOOK" "$GIT_HOOK_DST"
+fi
+
+GIT_HOOK=$PROJECT_ROOT/config/git/post-merge
+GIT_HOOK_DST=$PROJECT_ROOT/.git/hooks/post-merge
+
+if [ ! -e "$GIT_HOOK_DST" ]; then
+    echo "!! missing merge hook !!"
+    cp "$GIT_HOOK" "$GIT_HOOK_DST"
+fi
+
+if [ ! -e "$SETUP_FILE" ]; then
+	echo -n "setup for [l]ocal : "
+	read procede
+	# if [ "$procede" == "t" ]
+	# then
+	# 	echo "from _config._test import *" > $SETUP_FILE
+	# fi
+
+	if [ "$procede" == "l" ]
+	then
+		echo "from _config._local import *" > $SETUP_FILE
+	fi
+
+	./django/manage.py migrate
+	./django/manage.py createsuperuser --username=admin --email="support@311labs.com"
+fi
+
+if [ "$1" = "--reset" ]
+  then
+  echo -n "reset db [y/n]: "
+  read procede
+  if [ "$procede" == "y" ]
+  then
+./django/manage.py flush
+echo "set admin password..."
+./django/manage.py createsuperuser --username=admin --email="support@311labs.com"
+  fi
+fi
+
+if [ $IGNORE -ne 1 ];then
+	./bin/checkup.py
+	if [ $? -ne 0 ]; then
+	    echo "FIX ERRORS IN RPC"
+	    exit
+	fi
+	./django/manage.py showmigrations | grep '\[ \]'
+fi
+
+./django/manage.py shell
+

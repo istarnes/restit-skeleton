@@ -1,0 +1,9 @@
+{% extends "email/base.html" %}
+{% block body %}
+	<div style="text-align:center;">
+		<img src="{{group.thumbnail}}" class="group-thumb" alt="">
+		<h4>Your one-time code:</h4>
+		<h1 style="border: 1px solid black; padding:4px 20px; font-weight: bold;">{{code}}</h1>
+	</div>
+{% endblock %}
+

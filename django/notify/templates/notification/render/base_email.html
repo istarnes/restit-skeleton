@@ -1,0 +1,14 @@
+{% extends "base_email.html" %}
+
+{% block subheading %}NOTIFICATION{% endblock %}
+
+{% block body %}
+	<p>Hi {{ stat.user.get_full_name }},</p>
+
+	<p style="line-height: 1.2em;">
+	{% block message %}{% endblock %}
+	</p>
+{% comment %}
+
+{% endcomment %}
+{% endblock %}

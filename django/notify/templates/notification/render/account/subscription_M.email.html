@@ -1,0 +1,5 @@
+{% extends "notification/render/base_email_self.html" %}
+
+{% block message %}
+{% if stat.fromkind == 'S' %}Your vidiovibe.com subscription has expired.{% else %}Your free vidiovibe.com membership has been activated.{% endif %}
+{% endblock %}

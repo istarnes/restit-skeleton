@@ -1,0 +1,9 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+Your video upload for {{ stat.video.title }}</a>&rdquo; was approved.
+
+Yay! Remember to check the calendar for contest dates and share your new video with your fans. 
+
+View at: {{BASE_URL}}channels/video/{{ stat.video.id }}
+{% endblock %}

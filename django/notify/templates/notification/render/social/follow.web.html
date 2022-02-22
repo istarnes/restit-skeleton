@@ -1,0 +1,5 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block message %}
+<a href="/profile/{{ stat.related_user.username }}">{{ stat.related_user.member.display_name }}</a> is your newest fan.
+{% endblock %}

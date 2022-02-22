@@ -1,0 +1,6 @@
+{% extends "notification/render/base_web_self.html" %}{% load humanize %}
+
+{% block message %}
+Your video, &ldquo;<a href="/channels/video/{{ stat.video.id }}">{{ stat.video.title }}</a>&rdquo;,
+won the {{ stat.result.contest.get_kind_display|lower }} {{ stat.result.contest.category.name|lower }} competition.
+{% endblock %}

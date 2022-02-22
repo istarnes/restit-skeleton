@@ -1,0 +1,14 @@
+{% extends "email/base.html" %}
+{% block body %}
+<div style="text-align:center;">
+    <br>
+    {% if logo_src %}
+        <div class=logo><img src="{{logo_src}}" height="100", width="100"/></div>
+        <br>
+    {% endif %}
+    <h4>You have a new report available to download.</h4>
+
+    <a href="{{download_url}}" class="btn-primary">View Your Statement</a>
+    <a href="mailto:{{replyto}}" class="btn-primary">Questions and Concerns</a>
+</div>
+{% endblock %}

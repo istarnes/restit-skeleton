@@ -1,0 +1,268 @@
+{% extends "base_static.html" %} {% block title %}Login{% endblock %} {% block content %}
+<section id="login">
+    
+    <div id="loginbox" class="panel panel-none">
+        <div class="panel-body">
+            <div class="brand-title">
+                <img src="/static/monitoring/imgs/logo_bug.png" style="float: left; padding-right: 4px;" alt="">
+                <h4>MOBILE</h4><h1>MONITORING</h1>
+            </div>
+            <h2>Sign In</h2>
+            
+            {% if settings.ALLOW_SOCIAL_LOGIN %}
+            {% if settings.ALLOW_FACEBOOK_LOGIN %}
+            <a data-social="facebook" href="/login/facebook/?next={{next}}" class="btn btn-social bg-facebook">
+                <span class="icon-holder"><i class="fa fa-facebook"></i></span>
+                Sign in with <strong>Facebook</strong>
+            </a>
+            {% endif %}
+            {% if settings.ALLOW_GOOGLE_LOGIN %}
+            <a data-social="google" href="/login/google/?next={{next}}" class="btn btn-social bg-google">
+                <span class="icon-holder"><i class="fa fa-google-plus"></i></span>
+                Sign in with <strong>Google+</strong>
+            </a>
+            {% endif %}
+            {% if settings.ALLOW_TWITTER_LOGIN %}
+            <a data-social="twitter" href="/login/twitter/?next={{next}}" class="btn btn-social bg-twitter">
+                <span class="icon-holder"><i class="fa fa-twitter"></i></span>
+                Sign in with <strong>Twitter</strong>
+            </a>
+
+            <a data-social="instagram" href="/login/instagram/?next={{next}}" class="btn btn-social bg-instagram">
+                <span class="icon-holder"><i class="fa fa-instagram"></i></span>
+                Sign in with <strong>Instagram</strong>
+            </a>
+            {% endif %}
+            {% endif %}
+            {% if settings.ALLOW_USER_LOGIN %}
+            <div class="text-center">
+                <form class="form" id="login" method="POST" action="/login/?next={% if next and next.strip %}{{next}}{% else %}{{ request.path }}{% endif %}">{% csrf_token %}
+                            {% if form.non_field_errors %}
+                            <div class="errors">
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            </div>
+                            {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                          <input data-rules="required email" type="text" placeholder="Username or Email" name="username" id="username" class="form-control" autocomplete: "new-password" autocorrect: "off" autocapitalize: "off" spellcheck: "false">
+                        </div>
+                        <div class="form-group">
+                          <input data-rules="required password" type="password" name="password" id="password" placeholder="Password" class="form-control" autocomplete: "new-password" autocorrect: "off" autocapitalize: "off" spellcheck: "false">
+
+                        </div>
+                        <div id="error_msg"></div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-success btn-block">Sign In</button>
+                          <div class="row">
+                              <div class="col-xs-6 text-left">
+                                  <a href="#" id="token_login">token login</a>
+                              </div>
+                              <div class="col-xs-6 text-right">
+                                  <a href="/forgot">i forgot my password</a>
+                              </div>
+                          </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+                    
+ 
+                    <p class="terms">By signing in you agree to the <a href="/static/terms_and_conditions.pdf">terms here</a></p>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="brand_footer">
+        
+    </div>
+
+</section>
+
+<script>
+    $(document).ready(function () {
+        var $uname = $("input#username");
+        var $pword = $("input#password");
+        var me = new Models.User();
+        var waiting = new Backbone.View.Waiting();
+        waiting.fa_loader = true;
+
+        var on_pword_done = function(dlg, data) {
+            console.log(dlg);
+            console.log(data);
+            if (data.new_pword != data.confirm_pword) {
+                Backbone.View.Dialog.info("Error", "Passwords don't match!");
+            } else if (data.new_pword.strength() < 3) {
+                Backbone.View.Dialog.info("Error", "Password is weak!");
+            } else if (data.current_pword.length < 3) {
+                Backbone.View.Dialog.info("Error", "Enter current password!");
+            } else {
+                dlg.hide();
+                waiting.show();
+                Models.User.ChangePassword(data.username, data.current_pword, data.new_pword, function(model, resp){
+                    waiting.hide();
+                    if (resp.status) {
+                        dlg.remove();
+                        Backbone.View.Dialog.info("Success", "Your password has been succesfully updated", location.reload);
+                    } else {
+                        Backbone.View.Dialog.info("Error", resp.error, function(dlg2){
+                            dlg2.remove();
+                            dlg.show();
+                        });
+                    }
+                })
+            }
+        }   
+
+        var changePassword = function() {
+            Backbone.View.Dialog.formBuilder("Password Expired",
+                [
+                    {
+                        label:"Username",
+                        name:"username",
+                        type:"text",
+                        value: $uname.val(),
+                        columns: 12,
+                    },
+                    {
+                        name:"current_pword",
+                        label:"Current Password",
+                        type:"password",
+                        placeholder: "Enter Current Password",
+                        columns: 12,
+                    },
+                    {
+                        name:"new_pword",
+                        label:"New Password",
+                        type:"password",
+                        placeholder: "Enter New Password",
+                        columns: 12,
+                    },
+                    {
+                        name:"confirm_pword",
+                        label:"Confirm Password",
+                        type:"password",
+                        placeholder: "Confirm Password",
+                        columns: 12,
+                    },
+                ],
+                {
+                    callback:on_pword_done
+                });
+
+        }
+
+        var on_login = function(model, resp) {
+            if (resp.status) {
+                window.location.href = "/login";
+            } else {
+                waiting.hide();
+                if (resp.error_code == 412) {
+                    changePassword();
+                }
+                $("div#error_msg").text(resp.error);
+            }
+        }
+
+        $("form").on("submit", function(evt){
+            evt.preventDefault();
+            
+            var uname = $uname.val();
+            var pword = $pword.val();
+            if ((uname.length > 2)&&(pword.length > 5)) {
+                waiting.show("authenticating...");
+                me.login(uname, pword, on_login);
+            }
+            return false;
+        });
+
+        var reset_token_fields = [
+            {
+                type:"heading",
+                value:"A reset code has been sent to your email or phone.<br /><br />  Please enter it now. <br /><br />"
+            },
+            {
+                type:"line"
+            },
+            {
+                label: "Reset Code",
+                type: "text",
+                name: "invite_token",
+                placeholder: "Enter Code",
+                required: true,
+                classes: "input-lg",
+                attributes: {
+                    "autocomplete": "false"
+                }
+            }
+        ];
+
+        var on_submit_token = function(dlg, data) {
+            waiting.show();
+            data.invite_token = data.invite_token.replaceAll(' ', '');
+            me.tokenLogin(data, function(model, resp){
+                waiting.hide();
+                if (resp.status) {
+                    dlg.remove();
+                    on_login(model, resp);
+                } else {
+                    Backbone.View.Dialog.info("Login Failed", "Login Failed");
+                }
+            });
+        };
+
+        var on_forget_response = function(model, resp) {
+            waiting.hide();
+            if (!resp.status) {
+                app.warn("Invalid Account", "The account is not valid.");
+            } else {
+                Backbone.View.Dialog.formBuilder(
+                    "Login Code",
+                    reset_token_fields,
+                    {
+                        callback: on_submit_token
+                    });
+            }
+
+        }
+
+        $("a#token_login").on("click", function(evt){
+            var fields = [{
+                type:"spacer",
+                value:"<h3>Enter your username or email and a login token will be texted or emailed to you.</h3><br />"
+            },
+            {
+                label: "Account Name",
+                type: "text",
+                name: "username",
+                placeholder: "enter username or email",
+                required: true,
+                classes: "input-lg",
+                attributes: {
+                    "autocomplete": "false"
+                }
+            }];
+            Backbone.View.Dialog.formBuilder(
+                "Request Login Token",
+                fields,
+                {
+                    callback:function(dlg, data){
+                        dlg.remove();
+                        waiting.show();
+                        me.forgotPassword(data.username, on_forget_response);
+                    }
+                });
+        });
+    });
+
+</script>
+
+{% endblock content %}

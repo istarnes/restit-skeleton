@@ -1,0 +1,19 @@
+{% extends "email/base.html" %}
+{% block body %}
+<div style="text-align:center;">
+	<img src="{{group.thumbnail}}" class="group-thumb" alt="">
+	<h4>{{by.get_full_name}} invited you to join the '{{group.name}}' WePost team!</h4>
+</div>
+<p class="note">
+	{% if message %}
+    	{{message}}
+    	<br>
+    	- <img src="{{by.thumbnail}}" alt="" class="avatar"> {{by.get_full_name}}
+	{% endif %}
+</p>
+
+<p style="text-align:center;">Start recieving content and chat with {{by.get_full_name}} about the campaign.</p>
+<a href="{{BASE_URL}}itf/c/{{group.id}}/" class="button">Click here to join!</a>
+
+{% endblock %}
+

@@ -1,0 +1,9 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+Commented on your video: "{{ stat.video.title }}"
+
+Comment back at vidiovibe.com so they're not talking to themselves!
+
+View comment at: {{BASE_URL}}channels/video/{{ stat.video.id }}
+{% endblock %}

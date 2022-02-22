@@ -1,0 +1,5 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+Commented on your status update. ({{BASE_URL}}profile/{{ stat.user.username }}/)
+{% endblock %}

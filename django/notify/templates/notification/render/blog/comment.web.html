@@ -1,0 +1,5 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block message %}
+Commented on your <a href="/profile/{{ stat.user.username }}/">status update</a>.
+{% endblock %}

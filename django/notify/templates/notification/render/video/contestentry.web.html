@@ -1,0 +1,7 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block message %}
+You successfully entered the {{ stat.entry.contest.get_kind_display|lower }} {{ stat.video.channel.name }} contest, which begins {{ stat.entry.contest.start|date:"M jS" }}.
+Make sure to share the news with your friends and fans at VidioVibe and ask them rate your video (with 5 stars, of course).
+VidioVibe contests are based on the videos overall rating. 
+{% endblock %}

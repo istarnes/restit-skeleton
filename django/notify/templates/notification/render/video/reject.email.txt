@@ -1,0 +1,7 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+Sorry, your upload for {{ stat.video.title }} was rejected.
+
+Please try again. We'd love to see your work on VidioVibe.
+{% endblock %}

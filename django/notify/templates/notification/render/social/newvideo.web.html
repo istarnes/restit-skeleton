@@ -1,0 +1,5 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block message %}
+&ldquo;<a href="/channels/video/{{ stat.video.id }}">{{ stat.video.title }}</a>&rdquo; was added to your queue.
+{% endblock %}

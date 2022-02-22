@@ -1,0 +1,3 @@
+{% extends "notification/render/base_email.html" %}
+
+{% block user %}<a href="{{BASE_URL}}profile/{{ stat.user.username }}/" style="color: #263b42; font-size: 15px; text-decoration: none;">{{ stat.user.get_full_name }}</a>{% endblock %}

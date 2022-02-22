@@ -1,0 +1,9 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+{{ stat.video.title }} was added to your queue.
+
+Go to vidiovibe.com now to check it out, or build the suspense a little, have a PB&J and then watch. Your choice.
+
+Watch the video at {{BASE_URL}}channels/video/{{ stat.video.id }}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "notification/render/base_email.html" %}
+
+{% block message %}
+<a href="{{BASE_URL}}profile/{{ stat.related_user.username }}">{{ stat.related_user.member.display_name }}</a> is your newest fan.
+Have you seen their VidioVibe profile?
+{% endblock %}

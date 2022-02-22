@@ -1,0 +1,8 @@
+{% extends "notification/render/base_web.html" %}
+
+{% block user %}
+	<a href="/profile/{{ stat.user.username }}">{{ stat.user.get_full_name }}</a>
+{% endblock %}
+{% block avatar %}
+	<a href="/profile/{{ stat.user.username }}"><img src="{% if stat.user.member.small_thumbnail %}{{ stat.user.member.small_thumbnail }}{% else %}{{ RevData.image_user_thumbnail_small }}{% endif %}" /></a>
+{% endblock %}

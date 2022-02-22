@@ -1,0 +1,8 @@
+{% extends "notification/render/base_email.txt" %}
+
+{% block message %}
+{{ stat.related_user.member.display_name }} is your newest fan.
+Have you seen their VidioVibe profile?
+
+{{BASE_URL}}profile/{{ stat.related_user.username }}
+{% endblock %}

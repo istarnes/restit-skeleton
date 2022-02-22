@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "auto fix version conflicts..."
+./bin/script_helper.py

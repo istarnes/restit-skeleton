@@ -1,0 +1,74 @@
+{% extends "base_static.html" %}
+{% block title %}Login{% endblock %}
+{% block head_includes %}<link rel="stylesheet" href="/static/css/compiled/sign-in.css" type="text/css" media="screen" />{% endblock %}
+{% block content %}
+
+   <!-- Sign In Option 1 -->
+    <div id="sign_in1" class="login_form">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 header">
+                    <h4>Log in or Sign up</h4>
+                    <div class="col-md-4 social">
+                        <a href="{% url 'socialauth_begin' 'facebook' %}" class="circle facebook">
+                            <img src="/static/img/face.png" alt="">
+                        </a>
+                         <a href="{% url 'socialauth_begin' 'twitter' %}" class="circle twitter">
+                            <img src="/static/img/twt.png" alt="">
+                        </a>
+                         <a href="{% url 'socialauth_begin' 'google' %}" class="circle gplus">
+                            <img src="/static/img/gplus.png" alt="">
+                        </a>
+                    </div>
+
+		            {% if form.non_field_errors %}
+		            <div class="col-md-12 proof">
+		                <div class="alert alert-danger">
+		                	{{ form.non_field_errors }}
+		                </div>
+		            </div>
+					{% endif %}
+                </div>
+
+                <div class="col-sm-3 division">
+                    <div class="line l"></div>
+                    <span>or</span>
+                    <div class="line r"></div>
+                </div>
+
+                <div class="col-md-12 footer">
+                    <form class="form-inline" id="login" method="POST" action="/login/?next={% if next and next.strip %}{{next}}{% else %}{{ request.path }}{% endif %}">{% csrf_token %}
+
+                    <div class="input-group">
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                      <input data-rules="required email" type="text" placeholder="Username or Email" name="username" id="username" class="form-control">
+                    </div>
+                        
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                      <input data-rules="required password" type="password" name="password" placeholder="Password" class="form-control">
+                    </div>
+                        <p class="terms">By signing in you agree to the <a href="/static/terms_and_conditions.pdf">terms here</a></p>
+                        <input type="submit" value="sign in">
+                    </form>
+                </div>
+
+                <div class="col-md-12 proof">
+                    <div class="col-md-4">
+                    <div class="dosnt">
+                            <span>Don’t have an account?</span>
+                            <a href="/signup">Sign up</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 remember">
+                        <a href="/forgot">Forgot password?</a>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

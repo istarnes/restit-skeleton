@@ -1,0 +1,36 @@
+{% extends "base_static.html" %} {% block title %}Login{% endblock %} {% block content %}
+<section id="login">
+    
+    <div id="loginbox">
+        <div class="panel-body">
+            <h1 class="color-red text-center">
+                {{platform}} Account Already Linked
+            </h1>
+            <h5 style="color:#ccc;margin:0;padding:0;">
+                Logged in As
+            </h5>
+            <h5 style="color:#fff;margin:0;padding:0;">
+                <div>u: {{me.username}}</div>
+                <div>e: {{me.email}}</div>
+            </h5>
+            <br>
+            <h5 style="color:#ccc;margin:0;padding:0;">
+                {{platform}} is linked to
+            </h5>
+            <h5 style="color:#fff;margin:0;padding:0;">
+                <div>u: {{linked_to.username}}</div>
+                <div>e: {{linked_to.email}}</div>
+            </h5>
+            <br>
+            <h4 style="color:#fff;">What do you want to do?</h4>
+            <form>
+                <button name="linkto" class="btn btn-md btn-primary btn-block" value="me">LINK TO {{me.username}}</button>
+                <button name="linkto" class="btn btn-md btn-primary btn-block" value="keep">LOGIN AS {{linked_to.username}}</button>
+                    <br>
+                <button name="linkto" class="btn btn-md btn-warning btn-block" value="cancel">NEVERMIND, TAKE ME BACK</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

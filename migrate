@@ -1,0 +1,103 @@
+#!/usr/bin/env python
+import os, sys
+import subprocess
+
+# test for pipenv
+if not "PIPENV_ACTIVE" in os.environ and not "VIRTUAL_ENV" in os.environ.has_key:
+    # we may not be using pipenv... check if we have django
+    try:
+        import django
+        print("not using pipenv!!!")
+    except:
+        # we don't have django, and pipenv not active, lets attempt to rerun script in pipenv
+        cmd = ["pipenv", "run"] + sys.argv
+        print("attempting to run again via pipenv....")
+        ecode = subprocess.check_call(cmd)
+        exit(ecode)
+
+
+
+ROOT=os.path.dirname( os.path.realpath( __file__ ) )
+print(ROOT)
+sys.path.append(os.path.join(ROOT, 'django'))
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+import django
+django.setup()
+
+from django.apps import apps
+from django.db.migrations.executor import MigrationExecutor
+from django.db.migrations.autodetector import MigrationAutodetector
+from django.db.migrations.state import ProjectState
+from django.db import connections, DEFAULT_DB_ALIAS
+
+
+def isSynced(database):
+    return False if getMigrations(database) else True
+
+def getMigrations(database):
+    connection = connections[database]
+    connection.prepare_database()
+    executor = MigrationExecutor(connection)
+    targets = executor.loader.graph.leaf_nodes()
+    return executor.migration_plan(targets)
+
+def checkMissing(database):
+    changed = set()
+    connection = connections[database]
+    try:
+        executor = MigrationExecutor(connection)
+    except Exception:
+        sys.exit("Unable to check migrations: "
+                 "cannot connect to database\n")
+    autodetector = MigrationAutodetector(
+        executor.loader.project_state(),
+        ProjectState.from_apps(apps),
+    )
+    return autodetector.changes(graph=executor.loader.graph)
+    # changed = set()
+
+    # self.stdout.write("Checking...")
+    # for db in settings.DATABASES.keys():
+    #     try:
+    #         executor = MigrationExecutor(connections[db])
+    #     except OperationalError:
+    #         sys.exit("Unable to check migrations: "
+    #                  "cannot connect to database\n")
+
+    #     autodetector = MigrationAutodetector(
+    #         executor.loader.project_state(),
+    #         ProjectState.from_apps(apps),
+    #     )
+    #     changed.update(
+    #         autodetector.changes(graph=executor.loader.graph).keys())
+
+def makeMigration(app_label):
+    if os.system("./django/manage.py makemigrations {}".format(app_label)) == 0:
+        os.system("git add django/{}/migrations".format(app_label))
+        os.system("./django/manage.py migrate {}".format(app_label))
+
+def main(cmd, argv):
+    # Usage example.
+    missing = checkMissing(DEFAULT_DB_ALIAS)
+    if missing:
+        for app_label, items in missing.items():
+            print("*" * 80)
+            print("{} needs to create a migration for the following...".format(app_label))
+            for i in items:
+                print("\t+ {}\n\t\t{}".format(i.name, i.operations))
+            migrate = input("\nDO YOU WANT TO MAKE MIGRATION (n or y): ")
+            print("")
+            if migrate == 'y':
+                makeMigration(app_label)
+
+# migrations = getMigrations(DEFAULT_DB_ALIAS)
+# for m, migrated in migrations:
+#     print " + {} {}".format(m.app_label, m.name)
+
+# if not argv:
+#     # assume migrate
+#     print cmd
+if __name__ == '__main__':
+    main(sys.argv.pop(0), sys.argv)
