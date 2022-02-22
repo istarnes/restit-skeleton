@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'sessionlog',
     'notify',
     'telephony',
-    # 'test',
+    'example',
 
     # 'suit',
 
