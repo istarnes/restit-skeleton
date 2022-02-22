@@ -21,7 +21,7 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 SILENCED_SYSTEM_CHECKS = ["1_6.W001", "admin.E410"]
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'ilovebeer@@#)*butlikesecrets1234better'
+SECRET_KEY = 'a89opL5x75SYWsVKtOYPwQ575IpVzq0Ji69UeAJgWWerUM0zkSMzOdv94jxf5Oo0'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

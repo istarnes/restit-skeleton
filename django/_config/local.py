@@ -1,6 +1,10 @@
 from _config.defaults import *
 from _config.dbs.local import *
 
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'a89opL5x75SYWsVKtOYPwQ575IpVzq0Ji69UeAJgWWerUM0zkSMzOdv94jxf5Oo0'
+
+
 CAN_MIGRATE = True
 
 PERIODIC_APPS = []

@@ -178,7 +178,7 @@ def new_release(product, tag, url, msg):
     rev = tag.split('.')[-1]
     if not rev.isdigit():
         return False
-    token =  product.getProperty("git_token", "A3ExEyHCsNP1yuxM3aKc")
+    token =  product.getProperty("git_token", "XXXXX")
     release = Release(product=product, version_num=int(rev), version_str=version_str, notes=msg)
     release.owner = product.owner
     release_url = "{}/repository/{}/archive.zip?private_token={}".format(url, tag, token)
