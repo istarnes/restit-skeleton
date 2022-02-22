@@ -54,7 +54,7 @@ EXAMPLE GeoResult
 },
 """
 
-GOOGLE_MAPS_KEY="AIzaSyC46SASoplOAUf1rUNvENny3cJXx_1XwTo"
+GOOGLE_MAPS_KEY="XXXX"
 
 STATES = {
     'Mississippi': 'MS', 'Oklahoma': 'OK', 'Delaware': 'DE', 'Minnesota': 'MN', 'Illinois': 'IL', 'Arkansas': 'AR',
