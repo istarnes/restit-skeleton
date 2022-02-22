@@ -1,7 +1,0 @@
-{% block body %}{{body}}{% endblock %}
-
-{% block footer %}
-Sent Via
-	InTheFlow
-	http://itf.io
-{% endblock %}

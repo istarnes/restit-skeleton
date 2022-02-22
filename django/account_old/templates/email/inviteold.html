@@ -1,9 +1,0 @@
-{% extends "email/base.html" %}
-{% block body %}
-	<h4> <img src="{{by.thumbnail}}" alt="" class="avatar"> {{by.get_full_name}} invited you to join the '{{group.name}}' team!</h4>
-	<p class="note">
-	    {{message}}
-	</p>
-	<a href="{{BASE_URL}}invite/{{uuid}}-{{token}}" class="button">Click here to join!</a>
-{% endblock %}
-
